@@ -47,10 +47,6 @@ public class Main{
 			if(leastSignificant == 1)
 				prime.set((1+i));
 		}
-		System.out.println(bitsetToInteger(prime));
-		for(int i=0; i < 8; i++){
-			System.out.print(prime.get(i) + " ");
-		}
 		return bitsetToInteger(prime);
 	}
 
@@ -61,20 +57,54 @@ public class Main{
 		return leastSignificant;
 	}
 
-	/*Sub routine of findSevenBitPrimes() that will determine
-	if the number generated is indeed a prime number that
-	can be used in the cryptosystem.  A number can be declared prime if 
-	for 20 random a's such that 0<a<n, a passes the miller rabin karp test
-	for primality*/
-	public static boolean millerRabinKarp(int prime){
-
-		return false;
+	public static boolean checkIfBitIsSet(int x, int bit){
+		if((x & 1 << bit) != 0)
+			return true;
+		else
+			return false;
 	}
+
+	/*A number can be declared prime if for 20 random a's such that 0<a<n,
+	 a passes the miller rabin karp test for primality
+		-k is number of bits, so in this case it is 7
+		-x is n-1, where n is the number in question
+		-n is the number number we are checking for primality in 
+	 */
+	public static boolean millerRabinKarp(int a, int x, int n){
+		int y = 1;
+		int z;
+		for(int j=6; j<=0; j++){
+			z = y;
+			y = ((y * y) % n);
+			if((y==1) && (z != 1) && (z != (n-1)))
+				return false;
+			if(checkIfBitIsSet(x,j))
+				y = ((y * a) % n);
+		}
+		if(y != 1)
+			return false;
+		else
+			return true;
+		}
 
 	/*Checks to make sure that the p,q where p x q=n does
 	not satisfy p==q*/
 	public static boolean checkForEquality(int p, int q){
 		return p==q;
+	}
+
+	public static boolean primalityTest(int n){
+		System.out.println("n is " + n);
+		boolean isPrime = true;
+		for(int i=0; i < 20; i++){
+			int a = (int)(Math.random() * 128);
+			boolean b = millerRabinKarp(a, n-1, n);
+			if(b==false){
+				isPrime = false;
+				break;
+			}
+		}
+		return isPrime;
 	}
 
 	/*Finds a small number e that is relatively prime with the
@@ -88,7 +118,17 @@ public class Main{
 	}
 
 	public static void main(String[] args){
-		findSevenBitPrimes();
+		//find p
+		int p = findSevenBitPrimes();
+		while(primalityTest(p) == false)
+			p = findSevenBitPrimes();
+		//find q
+		int q = findSevenBitPrimes();
+		while(primalityTest(q) == false)
+			q = findSevenBitPrimes();
+
+		//lets just hope this passes for now...
+		checkForEquality(p,q);
 	}
 
 }
