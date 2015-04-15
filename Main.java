@@ -130,12 +130,27 @@ public class Main{
 		return 0;
 	}
 
+	/*
+	 | q | s | t
+	 |-----------
+   1 |   |   |
+	 |-----------
+   2 |   |   |
+	 |-----------
+   3 |   |   |
+	
+	This is a model of the 3x3 array that will be used to keep 
+	previous values of q,s,t.  This needs to be done because 
+	in order we must keep 2 previous values of q,s,t to calculate
+	s&t which will eventually be used to calculate d.
+	*/
 	public static int gcd(int r1, int r2){
 		int remainder = Integer.MAX_VALUE;
 		int alpha, beta;
 		int p = r1;
 		int q = r2;
 		while(remainder > 0){
+			System.out.println(p + " " + q);
 			if(q == 0)
 				break;
 			remainder = (p%q);
@@ -163,6 +178,9 @@ public class Main{
 		int n = (p*q);
 
 		int phi = computePhi(p,q);
+
+		int x = gcd(75,28);
+		System.out.println(x);
 
 	}
 
