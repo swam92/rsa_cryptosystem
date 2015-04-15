@@ -125,14 +125,26 @@ public class Main{
 	public static int findMultiplicativeInverse(int phi){
 		for(int i=3; i < phi; i++){
 			int greatestCD = gcd(i, phi);
-			
+
 		}
 		return 0;
 	}
 
 	public static int gcd(int r1, int r2){
-		
-		return 0;
+		int remainder = Integer.MAX_VALUE;
+		int alpha, beta;
+		int p = r1;
+		int q = r2;
+		while(remainder > 0){
+			if(q == 0)
+				break;
+			remainder = (p%q);
+			if(remainder == 0)
+				return q;
+			p = q;
+			q = remainder;
+		}
+		return remainder;
 	}
 
 	public static void main(String[] args){
@@ -152,7 +164,6 @@ public class Main{
 
 		int phi = computePhi(p,q);
 
-		
 	}
 
 }
