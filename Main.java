@@ -122,8 +122,16 @@ public class Main{
 	will use the extended Euclidian algorithm to check if
 	e is relatively prime and to find a multiplicative inverse
 	which we will call e */
-	public static int findMultiplicativeInverse(){
+	public static int findMultiplicativeInverse(int phi){
+		for(int i=3; i < phi; i++){
+			int greatestCD = gcd(i, phi);
+			
+		}
+		return 0;
+	}
 
+	public static int gcd(int r1, int r2){
+		
 		return 0;
 	}
 
