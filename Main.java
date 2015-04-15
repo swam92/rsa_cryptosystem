@@ -140,6 +140,10 @@ public class Main{
 		//lets just hope this passes for now...
 		checkForEquality(p,q);
 	
+		int n = (p*q);
+
+		int phi = computePhi(p,q);
+
 		
 	}
 
