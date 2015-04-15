@@ -117,6 +117,16 @@ public class Main{
 		return 0;
 	}
 
+	/*Pick a small number e to be the public key.  e must be
+	relatively prime with phi(n) (calculated above).  This method 
+	will use the extended Euclidian algorithm to check if
+	e is relatively prime and to find a multiplicative inverse
+	which we will call e */
+	public static int findMultiplicativeInverse(){
+
+		return 0;
+	}
+
 	public static void main(String[] args){
 		//find p
 		int p = findSevenBitPrimes();
@@ -129,6 +139,8 @@ public class Main{
 
 		//lets just hope this passes for now...
 		checkForEquality(p,q);
+	
+		
 	}
 
 }
