@@ -34,19 +34,20 @@ public class Main{
 	This will be done by generating random numbers and extracting
 	the least significant bit to use as the random bit*/
 	public static int findSevenBitPrimes(){
-		BitSet prime = new BitSet(32);
+		BitSet prime = new BitSet(6);
 		//set the 7th bit to 1
 		prime.set(6);
 		//set the first bit to 1
 		prime.set(0);
 
 		//loop 5 times, generate a random, bitshift to get least significant, add to bitset
-		for(int i=0; i < 5; i++){
+		for(int i=1; i <= 5; i++){
 			int x = (int )(Math.random() * 1000);
 			int leastSignificant = getLeastSignificantBit(x);
 			if(leastSignificant == 1)
 				prime.set((1+i));
 		}
+
 		return bitsetToInteger(prime);
 	}
 
@@ -70,16 +71,18 @@ public class Main{
 		-x is n-1, where n is the number in question
 		-n is the number number we are checking for primality in 
 	 */
-	public static boolean millerRabinKarp(int a, int x, int n){
+	public static boolean millerRabin(int a, int x){
 		int y = 1;
 		int z;
-		for(int j=6; j<=0; j++){
+
+		for(int j=6; j>=0; j--){
 			z = y;
-			y = ((y * y) % n);
-			if((y==1) && (z != 1) && (z != (n-1)))
+			y = ((y * y) % (x+1));
+			if((y==1) && (z != 1) && (z != (x)))
 				return false;
-			if(checkIfBitIsSet(x,j))
-				y = ((y * a) % n);
+			if(checkIfBitIsSet(x,j)){
+				y = ((y * a) % (x+1));
+			}
 		}
 		if(y != 1)
 			return false;
@@ -94,11 +97,11 @@ public class Main{
 	}
 
 	public static boolean primalityTest(int n){
-		System.out.println("n is " + n);
 		boolean isPrime = true;
+
 		for(int i=0; i < 20; i++){
 			int a = (int)(Math.random() * 128);
-			boolean b = millerRabinKarp(a, n-1, n);
+			boolean b = millerRabin(a, n-1);
 			if(b==false){
 				isPrime = false;
 				break;
