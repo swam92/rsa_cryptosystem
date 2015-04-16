@@ -121,16 +121,27 @@ public class Main{
 	relatively prime with phi(n) (calculated above).  This method 
 	will use the extended Euclidian algorithm to check if
 	e is relatively prime and to find a multiplicative inverse
-	which we will call e */
-	public static int findMultiplicativeInverse(int phi){
+	which we will call e 
+	pair
+	
+	*/
+	public static int[] findMultiplicativeInverse(int phi){
+		int[] pair = new int[2];
+		Arrays.fill(pair,-10);
 		for(int i=3; i < phi; i++){
-			int greatestCD = gcd(i, phi);
-
+			int greatestCD = gcd(phi, i);
+			if(greatestCD != -10){
+				pair[0] = i;
+				pair[1] = greatestCD;
+				return pair;
+			}
 		}
-		return 0;
+		return pair;
 	}
 
 	/*
+	values[][]:
+
 	 | q | s | t
 	 |-----------
    1 |   |   |
@@ -191,29 +202,43 @@ public class Main{
 			count++;
 			if( (q==0) && (p==1) ){
 				tFinal = (values[1][2] - (values[1][0] * values[2][2]));
-			}
-		}
+
+				/*if tFinal isn't between 0 and N..make it between 0 and n*/
+				if(tFinal < 0){
+					while(tFinal < 0)
+						tFinal += r1;
+				}
+				else if(tFinal > r1){
+					while(tFinal > r1)
+						tFinal = (tFinal - r1);
+				}
+
+			}//end if relatively prime
+		}//end while
 		return tFinal;
 	}
 
-	public static void main(String[] args){
-		//find p
+	public static int findPrimeDriver(){
 		int p = findSevenBitPrimes();
 		while(primalityTest(p) == false)
 			p = findSevenBitPrimes();
-		//find q
-		int q = findSevenBitPrimes();
-		while(primalityTest(q) == false)
-			q = findSevenBitPrimes();
+		return p;
+	}
 
-		//lets just hope this passes for now...
-		checkForEquality(p,q);
+	public static void main(String[] args){
+		//find p and q that are 7 bit prime
+		int p = findPrimeDriver();
+		int q = findPrimeDriver();
+
+		//if p==q, find new q until they are different!
+		while(checkForEquality(p,q)){
+			q = findPrimeDriver();
+		}
 	
 		int n = (p*q);
-
 		int phi = computePhi(p,q);
 
-		gcd(75,28);
+		int[] key = findMultiplicativeInverse(phi);
 
 	}
 
