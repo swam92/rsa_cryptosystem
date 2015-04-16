@@ -151,12 +151,8 @@ public class Main{
 		int q = r2;
 		int count = 0;
 		int[][] values = new int[3][3];
+		int tFinal = -10;
 		while(remainder > 0){
-			System.out.println(p + " " + q);
-			/*if(q == 0){
-				System.out.println("BREAKING AT q==0");
-				break;
-			}*/
 			remainder = (p%q);
 
 			/*The following conditions are responsbile for keeping
@@ -189,22 +185,15 @@ public class Main{
 				values[2][2] = (values[0][2] - (values[0][0] * values[1][2]));
 			}
 			/*****************************************************/
-			System.out.println("PRINTING ARRAYS....");
-			for(int o=0;o<values.length;o++){
-				for(int h=0;h<values.length;h++){
-					System.out.print(values[o][h] + " ");
-				}
-				System.out.println("");
-			}
+
 			p = q;
 			q = remainder;
 			count++;
-			
-			if(remainder == 0){
-				
+			if( (q==0) && (p==1) ){
+				tFinal = (values[1][2] - (values[1][0] * values[2][2]));
 			}
 		}
-		return remainder;
+		return tFinal;
 	}
 
 	public static void main(String[] args){
@@ -224,8 +213,7 @@ public class Main{
 
 		int phi = computePhi(p,q);
 
-		int x = gcd(75,28);
-		System.out.println(x);
+		gcd(75,28);
 
 	}
 
