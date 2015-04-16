@@ -149,15 +149,60 @@ public class Main{
 		int alpha, beta;
 		int p = r1;
 		int q = r2;
+		int count = 0;
+		int[][] values = new int[3][3];
 		while(remainder > 0){
 			System.out.println(p + " " + q);
-			if(q == 0)
+			/*if(q == 0){
+				System.out.println("BREAKING AT q==0");
 				break;
+			}*/
 			remainder = (p%q);
-			if(remainder == 0)
-				return q;
+
+			/*The following conditions are responsbile for keeping
+			track of q,s, and t.*/
+
+			if(count == 0){
+				values[count][0] = (int)Math.floor(p/q);
+				values[count][1] = 1;
+				values[count][2] = 0;
+			}
+			else if(count == 1){
+				values[count][0] = (int)Math.floor(p/q);
+				values[count][1] = 0;
+				values[count][2] = 1;
+			}
+			else if(count == 2){
+				values[count][0] = (int)Math.floor(p/q);
+				values[count][1] = (values[0][1] - (values[0][0] * values[1][1]));
+				values[count][2] = (values[0][2] - (values[0][0] * values[1][2]));	
+			}
+			else{
+				for(int i=0;i<3;i++){
+					values[0][i] = values[1][i];
+				}
+				for(int i=0;i<3;i++){
+					values[1][i] = values[2][i];
+				}
+				values[2][0] = (int)Math.floor(p/q);
+				values[2][1] = (values[0][1] - (values[0][0] * values[1][1]));
+				values[2][2] = (values[0][2] - (values[0][0] * values[1][2]));
+			}
+			/*****************************************************/
+			System.out.println("PRINTING ARRAYS....");
+			for(int o=0;o<values.length;o++){
+				for(int h=0;h<values.length;h++){
+					System.out.print(values[o][h] + " ");
+				}
+				System.out.println("");
+			}
 			p = q;
 			q = remainder;
+			count++;
+			
+			if(remainder == 0){
+				
+			}
 		}
 		return remainder;
 	}
