@@ -101,7 +101,7 @@ public class Main{
 			return false;
 		else
 			return true;
-		}
+	}
 
 	/*Checks to make sure that the p,q where p x q=n does
 	not satisfy p==q*/
@@ -246,27 +246,48 @@ public class Main{
 		return tFinal;
 	}
 
-	public static String makeS(int n, int e){
-		StringBuilder r = new StringBuilder();
-		r.append(" Alice");
+	public static int hashFunction(byte[] b){
+
+		return 0;
+	}
+
+	public static byte[] makeS(int n, int e){
+		byte[] ret = new byte[14];
+
+		ret[0] = 0;
+		ret[1] = 'A';
+		ret[2] = 'l';
+		ret[3] = 'i';
+		ret[4] = 'c';
+		ret[5] = 'e';
 
 		//length becomes the number of digits in n
 		int length = String.valueOf(n).length();
-
 		int temp = 4-length;
+		
 		for(int i=0; i < temp; i++){
-			r.append("0");
+			ret[6+i] = '0';
 		}
-		r.append(n);
+		int start = (6+temp);
+		String n1 = Integer.toString(n);
+		for(int i =0; i < length; i++){
+			ret[start+i] = (byte)n1.charAt(i);
+		}
 
 		length = String.valueOf(e).length();
 		temp = 4-length;
 		for(int i=0; i < temp; i++){
-			r.append("0");
+			ret[10+i] = 0;
 		}
-		r.append(e);
 
-		return r.toString();
+		int index = 10+temp;
+		String e1 = Integer.toString(e);
+		for(int i=0; i < length; i++){
+			System.out.println((byte)e1.charAt(i));
+			ret[index+i] = (byte)e1.charAt(i);
+		}
+
+		return ret;
 	}
 
 	public static int findPrimeDriver(){
@@ -290,6 +311,8 @@ public class Main{
 		int[] key = findMultiplicativeInverse(phi);
 
 		System.out.println("p= " + p + " q= " + q + " n = " + n + " e = " + key[0] + " d = " + key[1]);
+
+		makeS(n, key[0]);
 
 	}
 
