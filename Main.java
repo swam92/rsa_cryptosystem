@@ -3,16 +3,8 @@ import java.util.*;
 
 public class Main{
 
-	/*embedded class that will represent public/private key pairs
-	(n,e) ->public & (n,d) ->private*/
-	public static class Key{
-		int first, second;
-
-		public Key(int first, int second){
-			this.first = first;
-			this.second = second;
-		}
-	}
+	public static boolean printFlag1 = false;
+	public static boolean eflag = false;
 
 	/*returns n=(p-1)(q-1)*/
 	public static int computePhi(int p, int q){
@@ -39,15 +31,37 @@ public class Main{
 		//set the first bit to 1
 		prime.set(0);
 
+		int[] randomNums = new int[5];
+		int[] randomBits = new int[5];
 		//loop 5 times, generate a random, bitshift to get least significant, add to bitset
-		for(int i=1; i <= 5; i++){
+		for(int i=0; i < 5; i++){
 			int x = (int )(Math.random() * 1000);
 			int leastSignificant = getLeastSignificantBit(x);
+			randomNums[i] = x;
+			randomBits[i] = leastSignificant;
 			if(leastSignificant == 1)
 				prime.set((1+i));
 		}
 
-		return bitsetToInteger(prime);
+		int convertedToInt = bitsetToInteger(prime);
+
+		if(primalityTest(convertedToInt)){
+
+			if(printFlag1 == false){
+				System.out.println("prime is: " +convertedToInt);
+				for(int i=0;i<5;i++){
+					System.out.println(randomNums[i] + "    " + randomBits[i]);
+				}
+				System.out.println("-------------------------");
+				printFlag1=true;
+			}
+			return convertedToInt;
+		}
+		else{
+			findSevenBitPrimes();
+		}
+
+		return convertedToInt;
 	}
 
 	/*Extracts the least significant bit from the pseudo-random
@@ -204,29 +218,35 @@ public class Main{
 			if( (q==0) && (p==1) ){
 				tFinal = (values[1][2] - (values[1][0] * values[2][2]));
 
+				if(eflag == false){
+					System.out.println("remainder is 0..." + r1 + " " + r2 + " are relatively prime");
+				}
 				/*if tFinal isn't between 0 and N..make it between 0 and n*/
 				if(tFinal < 0){
 					while(tFinal < 0)
 						tFinal += r1;
+						if(eflag==false)
+							System.out.println(tFinal);
 				}
 				else if(tFinal > r1){
 					while(tFinal > r1)
 						tFinal = (tFinal - r1);
+						if(eflag==false)
+							System.out.println(tFinal);
 				}
 
+				System.out.println("d is " + tFinal);
+				eflag = true;
+
 			}//end if relatively prime
+			else if(eflag == false){
+				System.out.println("remainder is " + q);
+			}
 		}//end while
 		return tFinal;
 	}
 
-	public static int findPrimeDriver(){
-		int p = findSevenBitPrimes();
-		while(primalityTest(p) == false)
-			p = findSevenBitPrimes();
-		return p;
-	}
-
-	public static String makeR(int n, int e){
+	public static String makeS(int n, int e){
 		StringBuilder r = new StringBuilder();
 		r.append(" Alice");
 
@@ -249,6 +269,10 @@ public class Main{
 		return r.toString();
 	}
 
+	public static int findPrimeDriver(){
+		int p = findSevenBitPrimes();
+		return p;
+	}
 
 	public static void main(String[] args){
 		//find p and q that are 7 bit prime
@@ -265,8 +289,7 @@ public class Main{
 
 		int[] key = findMultiplicativeInverse(phi);
 
-		Key alicePublic = new Key(n, key[0]);
-		Key alicePrivate = new Key(n, key[1]);
+		System.out.println("p= " + p + " q= " + q + " n = " + n + " e = " + key[0] + " d = " + key[1]);
 
 	}
 
