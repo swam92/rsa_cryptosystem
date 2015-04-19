@@ -247,8 +247,13 @@ public class Main{
 	}
 
 	public static int hashFunction(byte[] b){
+		int finalByte = 0;
 
-		return 0;
+		for(int i=0; i < (b.length - 1); i++){
+			finalByte = (b[i] ^ b[i+1]);
+		}
+
+		return finalByte;
 	}
 
 	public static byte[] makeS(int n, int e){
@@ -283,7 +288,6 @@ public class Main{
 		int index = 10+temp;
 		String e1 = Integer.toString(e);
 		for(int i=0; i < length; i++){
-			System.out.println((byte)e1.charAt(i));
 			ret[index+i] = (byte)e1.charAt(i);
 		}
 
@@ -312,7 +316,8 @@ public class Main{
 
 		System.out.println("p= " + p + " q= " + q + " n = " + n + " e = " + key[0] + " d = " + key[1]);
 
-		makeS(n, key[0]);
+		byte[] prac = makeS(n, key[0]);
+		System.out.println(hashFunction(prac));
 
 	}
 
