@@ -28,7 +28,6 @@ public class Main{
    		return acc;
   	}
 	
-
 	/*Primes will be 7 bits.  First and last bits will be 1.
 	Internal 5 bits should be randomly choosen 1 by 1. 
 	This will be done by generating random numbers and extracting
@@ -124,9 +123,8 @@ public class Main{
 	relatively prime with phi(n) (calculated above).  This method 
 	will use the extended Euclidian algorithm to check if
 	e is relatively prime and to find a multiplicative inverse
-	which we will call e 
-	pair
-	
+	which we will call e. 
+	pair[e,d]
 	*/
 	public static int[] findMultiplicativeInverse(int phi){
 		int[] pair = new int[2];
@@ -228,6 +226,30 @@ public class Main{
 		return p;
 	}
 
+	public static String makeR(int n, int e){
+		StringBuilder r = new StringBuilder();
+		r.append(" Alice");
+
+		//length becomes the number of digits in n
+		int length = String.valueOf(n).length();
+
+		int temp = 4-length;
+		for(int i=0; i < temp; i++){
+			r.append("0");
+		}
+		r.append(n);
+
+		length = String.valueOf(e).length();
+		temp = 4-length;
+		for(int i=0; i < temp; i++){
+			r.append("0");
+		}
+		r.append(e);
+
+		return r.toString();
+	}
+
+
 	public static void main(String[] args){
 		//find p and q that are 7 bit prime
 		int p = findPrimeDriver();
@@ -242,6 +264,9 @@ public class Main{
 		int phi = computePhi(p,q);
 
 		int[] key = findMultiplicativeInverse(phi);
+
+		Key alicePublic = new Key(n, key[0]);
+		Key alicePrivate = new Key(n, key[1]);
 
 	}
 
