@@ -19,6 +19,41 @@ public class Main{
     	}
    		return acc;
   	}
+
+  	//u is less than n.  u is 32 bit integer
+  	public static int bobPicksU(int n){
+  		BitSet u = new BitSet(32);
+  		System.out.println("--------------");
+
+  		boolean flag = false;
+  		int bitToSet = 0;
+  		for(int i=31; i >= 0; i--){
+
+  			/*SET k-1 to 1, the rest are random*/
+  			if( (flag == true) && (i == bitToSet) ){
+  				u.set(bitToSet);
+  			}
+  			/*SETTING CONSEQUENT RANDOM BITS*/
+  			else if(flag == true){
+				int x = (int )(Math.random() * 1000);
+				int leastSignificant = getLeastSignificantBit(x);
+				if(leastSignificant == 1)
+					u.set(i);
+  			}
+
+  			/*FIND FIRST 1 BIT AND PREPARE TO SET IT IN NEXT ITERATION*/
+  			boolean checker = checkIfBitIsSet(n, i);
+  			if(checker == true){
+  				bitToSet = i-1;
+  				flag = true;
+  			}
+  			/********************************************************/
+
+  		}
+  		int returnU = bitsetToInteger(u);
+  		System.out.println("n, u " + n + " " + returnU);
+  		return returnU;
+  	}
 	
 	/*Primes will be 7 bits.  First and last bits will be 1.
 	Internal 5 bits should be randomly choosen 1 by 1. 
@@ -256,6 +291,17 @@ public class Main{
 		return finalByte;
 	}
 
+	public static int fastExponentiation(int m, int n, int e){
+		int y = 1;
+		for(int i=11; i >=0; i--){
+			y = ((y*y) % n);
+			if(checkIfBitIsSet(e,i))
+				y = ((m*y) % n);
+		}
+		System.out.println(y);
+		return y;
+	}
+
 	public static byte[] makeS(int n, int e){
 		byte[] ret = new byte[14];
 
@@ -317,7 +363,12 @@ public class Main{
 		System.out.println("p= " + p + " q= " + q + " n = " + n + " e = " + key[0] + " d = " + key[1]);
 
 		byte[] prac = makeS(n, key[0]);
-		System.out.println(hashFunction(prac));
+		int hashValue = hashFunction(prac);
+		System.out.println(hashValue);
+
+		int cipher = fastExponentiation(hashValue, n, key[0]);
+
+		bobPicksU(n);
 
 	}
 
