@@ -158,15 +158,6 @@ public class Main{
 		return isPrime;
 	}
 
-	/*Finds a small number e that is relatively prime with the
-	number of elements that are relatively prime with n.  This
-	routine will implement the extended Euclidian algorithm.  If no e
-	works, we must pick another random prime and start again.  e
-	will suffice even if it is greater than (phi(n))^(1/2)*/
-	public static int generatePublicKey(){
-
-		return 0;
-	}
 
 	/*Pick a small number e to be the public key.  e must be
 	relatively prime with phi(n) (calculated above).  This method 
@@ -368,7 +359,8 @@ public class Main{
 
 		int cipher = fastExponentiation(hashValue, n, key[0]);
 
-		bobPicksU(n);
+		int u =bobPicksU(n);
+
 
 	}
 
