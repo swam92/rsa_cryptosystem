@@ -93,10 +93,9 @@ public class Main{
 			return convertedToInt;
 		}
 		else{
-			findSevenBitPrimes();
+			return -100;
 		}
 
-		return convertedToInt;
 	}
 
 	/*Extracts the least significant bit from the pseudo-random
@@ -149,6 +148,7 @@ public class Main{
 
 		for(int i=0; i < 20; i++){
 			int a = (int)(Math.random() * 128);
+			System.out.println("(a, n) = (" + a + " ," + n +")");
 			boolean b = millerRabin(a, n-1);
 			if(b==false){
 				isPrime = false;
@@ -158,6 +158,14 @@ public class Main{
 		return isPrime;
 	}
 
+    public static int gcd2(int p, int q) {
+        while (q != 0) {
+            int temp = q;
+            q = p % q;
+            p = temp;
+        }
+        return p;
+    }
 
 	/*Pick a small number e to be the public key.  e must be
 	relatively prime with phi(n) (calculated above).  This method 
@@ -170,11 +178,27 @@ public class Main{
 		int[] pair = new int[2];
 		Arrays.fill(pair,-10);
 		for(int i=3; i < phi; i++){
+
+			int temp = gcd2(phi,i);
+			if(temp != 1){
+				continue;
+			}
+			else{
+				int[] tempArr = gcd1(phi, i);
+				for(int k=0; k < 3; k++){
+					System.out.print(tempArr[k] + " ");
+				}
+				System.out.println("DONE");
+			}
+
 			int greatestCD = gcd(phi, i);
 			if(greatestCD != -10){
 				pair[0] = i;
 				pair[1] = greatestCD;
 				return pair;
+			}
+			if(i == phi){
+				System.out.println("FAILLL");
 			}
 		}
 		return pair;
@@ -182,7 +206,6 @@ public class Main{
 
 	/*
 	values[][]:
-
 	 | q | s | t
 	 |-----------
    1 |   |   |
@@ -204,6 +227,7 @@ public class Main{
 		int count = 0;
 		int[][] values = new int[3][3];
 		int tFinal = -10;
+		System.out.println("STEPS OF THE EXTENDED EUCLIDIAN ALGORITHM");
 		while(remainder > 0){
 			remainder = (p%q);
 
@@ -214,16 +238,20 @@ public class Main{
 				values[count][0] = (int)Math.floor(p/q);
 				values[count][1] = 1;
 				values[count][2] = 0;
+				System.out.println(values[count][0] + " " + p + " " +q +" " +(p%q) + " "+ values[count][1] + " "+values[count][2]);
 			}
 			else if(count == 1){
 				values[count][0] = (int)Math.floor(p/q);
 				values[count][1] = 0;
 				values[count][2] = 1;
+				System.out.println(values[count][0] + " " + p + " " +q +" " +(p%q) + " "+ values[count][1] + " "+values[count][2]);
 			}
 			else if(count == 2){
 				values[count][0] = (int)Math.floor(p/q);
 				values[count][1] = (values[0][1] - (values[0][0] * values[1][1]));
-				values[count][2] = (values[0][2] - (values[0][0] * values[1][2]));	
+				values[count][2] = (values[0][2] - (values[0][0] * values[1][2]));
+				System.out.println(values[count][0] + " " + p + " " +q +" " +(p%q) + " "+ values[count][1] + " "+values[count][2]);
+
 			}
 			else{
 				for(int i=0;i<3;i++){
@@ -235,24 +263,31 @@ public class Main{
 				values[2][0] = (int)Math.floor(p/q);
 				values[2][1] = (values[0][1] - (values[0][0] * values[1][1]));
 				values[2][2] = (values[0][2] - (values[0][0] * values[1][2]));
+				System.out.println(values[2][0] + " " + p + " " +q +" " +(p%q) + " " + values[2][1] + " "+values[2][2]);
 			}
 			/*****************************************************/
+
 
 			p = q;
 			q = remainder;
 			count++;
 			if( (q==0) && (p==1) ){
 				tFinal = (values[1][2] - (values[1][0] * values[2][2]));
-
+				if(tFinal == 1){
+					return -10;
+				}
 				if(eflag == false){
-					System.out.println("remainder is 0..." + r1 + " " + r2 + " are relatively prime");
+					System.out.println("remainder is 0..." + r1 + " " + r2 + " are relatively prime + " +tFinal);
 				}
 				/*if tFinal isn't between 0 and N..make it between 0 and n*/
 				if(tFinal < 0){
-					while(tFinal < 0)
+					while(tFinal < 0){
+						System.out.println("HEREEEEE  R!! is " + r1 + "  " + tFinal);
 						tFinal += r1;
-						if(eflag==false)
+						if(eflag==false){
 							System.out.println(tFinal);
+						}
+					}
 				}
 				else if(tFinal > r1){
 					while(tFinal > r1)
@@ -261,12 +296,10 @@ public class Main{
 							System.out.println(tFinal);
 				}
 
-				System.out.println("d is " + tFinal);
 				eflag = true;
 
 			}//end if relatively prime
 			else if(eflag == false){
-				System.out.println("remainder is " + q);
 			}
 		}//end while
 		return tFinal;
@@ -276,10 +309,23 @@ public class Main{
 		int finalByte = 0;
 
 		for(int i=0; i < (b.length - 1); i++){
-			finalByte = (b[i] ^ b[i+1]);
+			b[i+1] = (byte)(b[i] ^ b[i+1]);
 		}
-
+		finalByte = (int)b[b.length-1];
 		return finalByte;
+	}
+	
+	public static int hashFunction2(int u){
+		String s = u + "";
+		int finalByte = 0;
+		byte b = (byte)(s.charAt(0) ^ s.charAt(1));
+		for(int i=1; i < 3; i++){
+			b = (byte)(b ^ s.charAt(i+1));
+		}
+		System.out.println(Integer.toBinaryString( (int) b));
+		System.out.println("b is " + (int)b);
+
+		return (int)b;
 	}
 
 	public static int fastExponentiation(int m, int n, int e){
@@ -289,7 +335,6 @@ public class Main{
 			if(checkIfBitIsSet(e,i))
 				y = ((m*y) % n);
 		}
-		System.out.println(y);
 		return y;
 	}
 
@@ -333,8 +378,24 @@ public class Main{
 
 	public static int findPrimeDriver(){
 		int p = findSevenBitPrimes();
+		while(p == -100){
+			p = findSevenBitPrimes();
+		}
 		return p;
 	}
+
+   static int[] gcd1(int p, int q) {
+      if (q == 0)
+         return new int[] { p, 1, 0 };
+
+      int[] vals = gcd1(q, p % q);
+      int d = vals[0];
+      int a = vals[2];
+      int b = vals[1] - (p / q) * vals[2];
+      //System.out.println("d: " + d + " a: " + a + " b: " + b);
+      return new int[] { d, a, b };
+   }
+
 
 	public static void main(String[] args){
 		//find p and q that are 7 bit prime
@@ -355,11 +416,21 @@ public class Main{
 
 		byte[] prac = makeS(n, key[0]);
 		int hashValue = hashFunction(prac);
-		System.out.println(hashValue);
+		System.out.println(hashValue + " is hashvalue");
 
 		int cipher = fastExponentiation(hashValue, n, key[0]);
 
 		int u =bobPicksU(n);
+		int hashedValue = hashFunction2(u);
+		System.out.println("HASHED VALUE IS  " + hashedValue);
+		int exp = fastExponentiation(hashedValue, n, key[1]);
+
+		System.out.println("decrypted value is " + exp);
+
+		int exp1 = fastExponentiation(exp, n, key[0]);
+
+		System.out.println(exp1);
+
 
 
 	}
