@@ -85,7 +85,7 @@ public class Main{
 			if(printFlag1 == false){
 				System.out.println("prime is: " +convertedToInt);
 				for(int i=0;i<5;i++){
-					System.out.println(randomNums[i] + "    " + randomBits[i]);
+					System.out.println("random num " + randomNums[i] + "    " + "bit " + randomBits[i]);
 				}
 				System.out.println("-------------------------");
 				printFlag1=true;
@@ -121,16 +121,26 @@ public class Main{
 	public static boolean millerRabin(int a, int x){
 		int y = 1;
 		int z;
-
+		int tempy;
+		//structure to accumulate values of y,x,z
+		StringBuilder sb = new StringBuilder();
+		sb.append("Miller Rabin algorithm " + "\n");
 		for(int j=6; j>=0; j--){
+			tempy = y;
 			z = y;
 			y = ((y * y) % (x+1));
 			if((y==1) && (z != 1) && (z != (x)))
 				return false;
 			if(checkIfBitIsSet(x,j)){
+				sb.append("1 ");
 				y = ((y * a) % (x+1));
 			}
+			else{
+				sb.append("0 ");
+			}
+			sb.append(z + " " + tempy + " " + y + "\n");
 		}
+		System.out.println(sb.toString());
 		if(y != 1)
 			return false;
 		else
@@ -148,7 +158,6 @@ public class Main{
 
 		for(int i=0; i < 20; i++){
 			int a = (int)(Math.random() * 128);
-			System.out.println("(a, n) = (" + a + " ," + n +")");
 			boolean b = millerRabin(a, n-1);
 			if(b==false){
 				isPrime = false;
@@ -183,13 +192,6 @@ public class Main{
 			if(temp != 1){
 				continue;
 			}
-			else{
-				int[] tempArr = gcd1(phi, i);
-				for(int k=0; k < 3; k++){
-					System.out.print(tempArr[k] + " ");
-				}
-				System.out.println("DONE");
-			}
 
 			int greatestCD = gcd(phi, i);
 			if(greatestCD != -10){
@@ -197,9 +199,7 @@ public class Main{
 				pair[1] = greatestCD;
 				return pair;
 			}
-			if(i == phi){
-				System.out.println("FAILLL");
-			}
+
 		}
 		return pair;
 	}
@@ -227,7 +227,7 @@ public class Main{
 		int count = 0;
 		int[][] values = new int[3][3];
 		int tFinal = -10;
-		System.out.println("STEPS OF THE EXTENDED EUCLIDIAN ALGORITHM");
+		System.out.println("Extended Euclidian Algorithm");
 		while(remainder > 0){
 			remainder = (p%q);
 
@@ -277,12 +277,11 @@ public class Main{
 					return -10;
 				}
 				if(eflag == false){
-					System.out.println("remainder is 0..." + r1 + " " + r2 + " are relatively prime + " +tFinal);
+					System.out.println("remainder is 0..." + r1 + " " + r2 + " are relatively prime");
 				}
 				/*if tFinal isn't between 0 and N..make it between 0 and n*/
 				if(tFinal < 0){
 					while(tFinal < 0){
-						System.out.println("HEREEEEE  R!! is " + r1 + "  " + tFinal);
 						tFinal += r1;
 						if(eflag==false){
 							System.out.println(tFinal);
@@ -305,6 +304,7 @@ public class Main{
 		return tFinal;
 	}
 
+	/*Hash function as described in prompt for the signature*/
 	public static int hashFunction(byte[] b){
 		int finalByte = 0;
 
@@ -314,16 +314,15 @@ public class Main{
 		finalByte = (int)b[b.length-1];
 		return finalByte;
 	}
-	
+	/*Same hash as above but specific to u*/
 	public static int hashFunction2(int u){
 		String s = u + "";
 		int finalByte = 0;
 		byte b = (byte)(s.charAt(0) ^ s.charAt(1));
-		for(int i=1; i < 3; i++){
+		for(int i=1; i < (s.length() -1); i++){
 			b = (byte)(b ^ s.charAt(i+1));
 		}
 		System.out.println(Integer.toBinaryString( (int) b));
-		System.out.println("b is " + (int)b);
 
 		return (int)b;
 	}
@@ -384,19 +383,6 @@ public class Main{
 		return p;
 	}
 
-   static int[] gcd1(int p, int q) {
-      if (q == 0)
-         return new int[] { p, 1, 0 };
-
-      int[] vals = gcd1(q, p % q);
-      int d = vals[0];
-      int a = vals[2];
-      int b = vals[1] - (p / q) * vals[2];
-      //System.out.println("d: " + d + " a: " + a + " b: " + b);
-      return new int[] { d, a, b };
-   }
-
-
 	public static void main(String[] args){
 		//find p and q that are 7 bit prime
 		int p = findPrimeDriver();
@@ -416,22 +402,20 @@ public class Main{
 
 		byte[] prac = makeS(n, key[0]);
 		int hashValue = hashFunction(prac);
-		System.out.println(hashValue + " is hashvalue");
+		System.out.println(hashValue + " is hashvalue of signature");
 
 		int cipher = fastExponentiation(hashValue, n, key[0]);
 
 		int u =bobPicksU(n);
 		int hashedValue = hashFunction2(u);
-		System.out.println("HASHED VALUE IS  " + hashedValue);
+		System.out.println("Hash value of u is " + hashedValue);
 		int exp = fastExponentiation(hashedValue, n, key[1]);
 
-		System.out.println("decrypted value is " + exp);
+		System.out.println("decrypted value of h(u) is " + exp);
 
 		int exp1 = fastExponentiation(exp, n, key[0]);
 
-		System.out.println(exp1);
-
-
+		System.out.println("Encrpyted value of " + exp + " is " +exp1);
 
 	}
 
