@@ -385,6 +385,7 @@ public class Main{
 	public static int fastExponentiation(int m, int n, int e, boolean print){
 		int y = 1;
 		StringBuilder sb = new StringBuilder();
+		sb.append("----------------" + "\n");
 		sb.append("Line 219: " + "\n");
 		sb.append("Trace of E(e,v):" + "\n");
 		for(int i=16; i >=0; i--){
@@ -399,6 +400,7 @@ public class Main{
 			else{
 				sb.append("0 " + y + " " + y + "\n");
 			}
+
 		}
 		if(print == true){
 			System.out.println("E(,e,v) = " + y + " " + Integer.toBinaryString(y));
@@ -466,6 +468,7 @@ public class Main{
 		int n = (p*q);
 		int phi = computePhi(p,q);
 		int[] key = findMultiplicativeInverse(phi);
+		System.out.println("--------------");
 		System.out.println("Line 156");
 		System.out.println("p= " + p + " q= " + q + " n = " + n + " e = " + key[0] + " d = " + key[1]);
 		/*END ALICE*/
@@ -485,6 +488,7 @@ public class Main{
 		/*END TRENT*/
 
 		/*TRENT SIGNATURE PRINTING*/
+		System.out.println("--------------");
 		System.out.println("Line 185: ");
 		System.out.println("r, h(r), and s as a sequence of bits");
 		byte[] r = makeS(n, key[0]);
@@ -503,10 +507,12 @@ public class Main{
 		/*END TRENT SIGNATURE PRINTING*/
 
 		int u =bobPicksU(n);
+		System.out.println("--------------");
 		System.out.println("Line 206:");
 		System.out.println("k = " + bobK + " u = " + u);
 		System.out.println("Line 208:");
 		System.out.println("u as binary string " + Integer.toBinaryString(u));
+		System.out.println("--------------");
 
 		System.out.println("Line 215:");
 		System.out.println("u: " + u + " " + Integer.toBinaryString(u));		
