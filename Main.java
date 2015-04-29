@@ -5,6 +5,17 @@ public class Main{
 
 	public static boolean printFlag1 = false;
 	public static boolean eflag = false;
+	public static boolean euclidianFlag = false;
+	public static boolean notPrime = false;
+	
+	/*MILLER RABIN PRINT FLAGS*/
+	public static StringBuilder mPrime = new StringBuilder();
+	public static StringBuilder mNPrime = new StringBuilder();
+	public static boolean millerPrimeFlag = false;
+	public static boolean millerNotPrimeFlag = false;
+	/*MILLER RABIN PRINT FLAGS*/
+
+	public static int bobK = 0;
 
 	/*returns n=(p-1)(q-1)*/
 	public static int computePhi(int p, int q){
@@ -15,7 +26,9 @@ public class Main{
 	public static int bitsetToInteger(BitSet b){
 		int acc = 0;
     	for (int i = 0; i < b.length(); ++i) {
-      		acc += b.get(i) ? (1 << i) : 0;
+    		if(b.get(i)){
+    			acc+= (1 << i);
+    		} 
     	}
    		return acc;
   	}
@@ -45,13 +58,15 @@ public class Main{
   			boolean checker = checkIfBitIsSet(n, i);
   			if(checker == true){
   				bitToSet = i-1;
+  				if(flag == false){
+  					bobK = (i-1);
+  				}
   				flag = true;
   			}
   			/********************************************************/
 
   		}
   		int returnU = bitsetToInteger(u);
-  		System.out.println("n, u " + n + " " + returnU);
   		return returnU;
   	}
 	
@@ -83,12 +98,18 @@ public class Main{
 		if(primalityTest(convertedToInt)){
 
 			if(printFlag1 == false){
-				System.out.println("prime is: " +convertedToInt);
+				System.out.println("line 104: ");
+				System.out.println("prime n is: " +convertedToInt);
 				for(int i=0;i<5;i++){
 					System.out.println("random num " + randomNums[i] + "    " + "bit " + randomBits[i]);
 				}
 				System.out.println("-------------------------");
 				printFlag1=true;
+				System.out.println("Line 123:");
+				System.out.println("Miller Rabin for prime number");
+				System.out.println("number is " + convertedToInt + " value of a is 19");
+				System.out.println(mPrime.toString());
+				millerPrimeFlag = true;
 			}
 			return convertedToInt;
 		}
@@ -106,10 +127,12 @@ public class Main{
 	}
 
 	public static boolean checkIfBitIsSet(int x, int bit){
-		if((x & 1 << bit) != 0)
+		if((x & 1 << bit) != 0){
 			return true;
-		else
+		}
+		else{
 			return false;
+		}
 	}
 
 	/*A number can be declared prime if for 20 random a's such that 0<a<n,
@@ -122,9 +145,9 @@ public class Main{
 		int y = 1;
 		int z;
 		int tempy;
-		//structure to accumulate values of y,x,z
-		StringBuilder sb = new StringBuilder();
-		sb.append("Miller Rabin algorithm " + "\n");
+		mPrime.delete(0, mPrime.length());
+		mNPrime.delete(0, mNPrime.length());
+
 		for(int j=6; j>=0; j--){
 			tempy = y;
 			z = y;
@@ -132,15 +155,18 @@ public class Main{
 			if((y==1) && (z != 1) && (z != (x)))
 				return false;
 			if(checkIfBitIsSet(x,j)){
-				sb.append("1 ");
+				mPrime.append("1 ");
+				mNPrime.append("1 ");
 				y = ((y * a) % (x+1));
 			}
 			else{
-				sb.append("0 ");
+				mPrime.append("0 ");
+				mNPrime.append("0 ");
 			}
-			sb.append(z + " " + tempy + " " + y + "\n");
+			mPrime.append(z + " " + tempy + " " + y + "\n");
+			mNPrime.append(z + " " + tempy + " " + y + "\n");
+
 		}
-		System.out.println(sb.toString());
 		if(y != 1)
 			return false;
 		else
@@ -161,16 +187,25 @@ public class Main{
 			boolean b = millerRabin(a, n-1);
 			if(b==false){
 				isPrime = false;
+				if(millerNotPrimeFlag == false){
+					notPrime = true;
+					System.out.println("Line 119:");
+					System.out.println("Miller Rabin for not prime number");
+					System.out.println("number is " + n + " value of a is " + a);
+					System.out.println(mNPrime.toString());
+					millerNotPrimeFlag = true;
+				}
 				break;
 			}
 		}
+
 		return isPrime;
 	}
 
     public static int gcd2(int p, int q) {
         while (q != 0) {
             int temp = q;
-            q = p % q;
+            q = (p % q);
             p = temp;
         }
         return p;
@@ -227,7 +262,11 @@ public class Main{
 		int count = 0;
 		int[][] values = new int[3][3];
 		int tFinal = -10;
-		System.out.println("Extended Euclidian Algorithm");
+		StringBuilder sb = new StringBuilder();
+		if(euclidianFlag == false){
+			System.out.println("Line 142:");
+			System.out.println("Extended Euclidian Algorithm on e=" + r2);
+		}
 		while(remainder > 0){
 			remainder = (p%q);
 
@@ -238,19 +277,25 @@ public class Main{
 				values[count][0] = (int)Math.floor(p/q);
 				values[count][1] = 1;
 				values[count][2] = 0;
-				System.out.println(values[count][0] + " " + p + " " +q +" " +(p%q) + " "+ values[count][1] + " "+values[count][2]);
+				if(euclidianFlag == false){
+					System.out.println(values[count][0] + " " + p + " " +q +" " +(p%q) + " "+ values[count][1] + " "+values[count][2]);
+				}
 			}
 			else if(count == 1){
 				values[count][0] = (int)Math.floor(p/q);
 				values[count][1] = 0;
 				values[count][2] = 1;
-				System.out.println(values[count][0] + " " + p + " " +q +" " +(p%q) + " "+ values[count][1] + " "+values[count][2]);
+				if(euclidianFlag == false){
+					System.out.println(values[count][0] + " " + p + " " +q +" " +(p%q) + " "+ values[count][1] + " "+values[count][2]);
+				}
 			}
 			else if(count == 2){
 				values[count][0] = (int)Math.floor(p/q);
 				values[count][1] = (values[0][1] - (values[0][0] * values[1][1]));
 				values[count][2] = (values[0][2] - (values[0][0] * values[1][2]));
-				System.out.println(values[count][0] + " " + p + " " +q +" " +(p%q) + " "+ values[count][1] + " "+values[count][2]);
+				if(euclidianFlag == false){
+					System.out.println(values[count][0] + " " + p + " " +q +" " +(p%q) + " "+ values[count][1] + " "+values[count][2]);
+				}
 
 			}
 			else{
@@ -263,7 +308,9 @@ public class Main{
 				values[2][0] = (int)Math.floor(p/q);
 				values[2][1] = (values[0][1] - (values[0][0] * values[1][1]));
 				values[2][2] = (values[0][2] - (values[0][0] * values[1][2]));
-				System.out.println(values[2][0] + " " + p + " " +q +" " +(p%q) + " " + values[2][1] + " "+values[2][2]);
+				if(euclidianFlag == false){
+					System.out.println(values[2][0] + " " + p + " " +q +" " +(p%q) + " " + values[2][1] + " "+values[2][2]);
+				}
 			}
 			/*****************************************************/
 
@@ -277,22 +324,31 @@ public class Main{
 					return -10;
 				}
 				if(eflag == false){
-					System.out.println("remainder is 0..." + r1 + " " + r2 + " are relatively prime");
+					if(euclidianFlag == false){
+						System.out.println("remainder is 0..." + r1 + " " + r2 + " are relatively prime");
+					}
 				}
 				/*if tFinal isn't between 0 and N..make it between 0 and n*/
 				if(tFinal < 0){
 					while(tFinal < 0){
 						tFinal += r1;
 						if(eflag==false){
-							System.out.println(tFinal);
+							if(euclidianFlag == false){
+								System.out.println("Line 152:");
+								System.out.println(tFinal);
+							}
 						}
 					}
 				}
 				else if(tFinal > r1){
 					while(tFinal > r1)
 						tFinal = (tFinal - r1);
-						if(eflag==false)
-							System.out.println(tFinal);
+						if(eflag==false){
+							if(euclidianFlag == false){
+								System.out.println("Line 152:");
+								System.out.println(tFinal);
+							}
+						}
 				}
 
 				eflag = true;
@@ -322,17 +378,31 @@ public class Main{
 		for(int i=1; i < (s.length() -1); i++){
 			b = (byte)(b ^ s.charAt(i+1));
 		}
-		System.out.println(Integer.toBinaryString( (int) b));
 
 		return (int)b;
 	}
 
-	public static int fastExponentiation(int m, int n, int e){
+	public static int fastExponentiation(int m, int n, int e, boolean print){
 		int y = 1;
-		for(int i=11; i >=0; i--){
+		StringBuilder sb = new StringBuilder();
+		sb.append("Line 219: " + "\n");
+		sb.append("Trace of E(e,v):" + "\n");
+		for(int i=16; i >=0; i--){
+			sb.append(i + " ");
 			y = ((y*y) % n);
-			if(checkIfBitIsSet(e,i))
+			if(checkIfBitIsSet(e,i)){
+				sb.append("1 ");
+				sb.append(y + " ");
 				y = ((m*y) % n);
+				sb.append(y + "\n");
+			}
+			else{
+				sb.append("0 " + y + " " + y + "\n");
+			}
+		}
+		if(print == true){
+			System.out.println("E(,e,v) = " + y + " " + Integer.toBinaryString(y));
+			System.out.println(sb.toString());
 		}
 		return y;
 	}
@@ -384,38 +454,72 @@ public class Main{
 	}
 
 	public static void main(String[] args){
+
+		/*ALICE*/
 		//find p and q that are 7 bit prime
 		int p = findPrimeDriver();
 		int q = findPrimeDriver();
-
 		//if p==q, find new q until they are different!
 		while(checkForEquality(p,q)){
 			q = findPrimeDriver();
 		}
-	
 		int n = (p*q);
 		int phi = computePhi(p,q);
-
 		int[] key = findMultiplicativeInverse(phi);
-
+		System.out.println("Line 156");
 		System.out.println("p= " + p + " q= " + q + " n = " + n + " e = " + key[0] + " d = " + key[1]);
+		/*END ALICE*/
 
-		byte[] prac = makeS(n, key[0]);
-		int hashValue = hashFunction(prac);
-		System.out.println(hashValue + " is hashvalue of signature");
+		euclidianFlag =true;
 
-		int cipher = fastExponentiation(hashValue, n, key[0]);
+		/*TRENT*/
+		int pT = findPrimeDriver();
+		int qT = findPrimeDriver();
+		//if p==q, find new q until they are different!
+		while(checkForEquality(pT,qT)){
+			qT = findPrimeDriver();
+		}
+		int nT = (p*q);
+		int phiT = computePhi(pT,qT);
+		int[] keyT = findMultiplicativeInverse(phiT);
+		/*END TRENT*/
+
+		/*TRENT SIGNATURE PRINTING*/
+		System.out.println("Line 185: ");
+		System.out.println("r, h(r), and s as a sequence of bits");
+		byte[] r = makeS(n, key[0]);
+		for(int i=0; i <r.length; i++){
+			byte b1 = (byte) r[i];
+			String s1 = String.format("%8s", Integer.toBinaryString(b1 & 0xFF)).replace(' ', '0');
+			System.out.print(s1);
+		}
+		System.out.println("");
+		int hr = hashFunction(r);
+		System.out.println(Integer.toBinaryString(hr));
+		int s = fastExponentiation(hr, n, key[0],false);
+		System.out.println(Integer.toBinaryString(s));
+		System.out.println("Line 187:");
+		System.out.println("h(r) = " + hr + " s = " + s);
+		/*END TRENT SIGNATURE PRINTING*/
 
 		int u =bobPicksU(n);
+		System.out.println("Line 206:");
+		System.out.println("k = " + bobK + " u = " + u);
+		System.out.println("Line 208:");
+		System.out.println("u as binary string " + Integer.toBinaryString(u));
+
+		System.out.println("Line 215:");
+		System.out.println("u: " + u + " " + Integer.toBinaryString(u));		
+
 		int hashedValue = hashFunction2(u);
-		System.out.println("Hash value of u is " + hashedValue);
-		int exp = fastExponentiation(hashedValue, n, key[1]);
-
-		System.out.println("decrypted value of h(u) is " + exp);
-
-		int exp1 = fastExponentiation(exp, n, key[0]);
-
-		System.out.println("Encrpyted value of " + exp + " is " +exp1);
+		System.out.println("h(u): " + hashedValue + " " + Integer.toBinaryString(hashedValue));
+		int exp = fastExponentiation(hashedValue, n, key[1],false);
+		System.out.println("D(d,h(u)): " + exp + " " + Integer.toBinaryString(exp));
+		int exp1 = fastExponentiation(exp, n, key[0], true);
+		
+		if(notPrime == false){
+			primalityTest(100);
+		}
 
 	}
 
