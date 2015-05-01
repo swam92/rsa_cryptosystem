@@ -1,0 +1,6 @@
+This program can run on any platform that supports java.  Output is written to console.
+
+Compile with:
+	javac Main.java
+Run with:
+	java Main
